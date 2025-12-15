@@ -54,19 +54,14 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
                     String email = oAuth2User.getAttributes().getOrDefault("email", "").toString();
                     String name = oAuth2User.getAttributes().getOrDefault("name", "").toString();
                     String picture = oAuth2User.getAttributes().getOrDefault("picture", "").toString();
-                    user = User.builder()
+                    User newUser = User.builder()
                             .name(name)
                             .image(picture)
                             .email(email)
                             .enable(true)
                             .provider(Provider.GOOGLE)
                             .build();
-                    userRepo.findByEmail(email).ifPresentOrElse(user1 -> {
-                        logger.info("User already exist not saving in DB");
-                        logger.info(user1.toString());
-                    },()->{
-                        userRepo.save(user);
-                    });
+                    user = userRepo.findByEmail(email).orElseGet(()-> userRepo.save(newUser));
 
                     String jti = UUID.randomUUID().toString();
                     RefreshToken refreshTokenOb = RefreshToken.builder()
