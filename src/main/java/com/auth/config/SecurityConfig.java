@@ -46,8 +46,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests( authorizeHttpRequests -> authorizeHttpRequests
                         .requestMatchers("/api/v1/auth/register").permitAll()
                         .requestMatchers("/api/v1/auth/login").permitAll()
-                        .requestMatchers("api/v1/auth/refresh").permitAll()
-                        .requestMatchers("api/v1/auth/logout").permitAll()
+                        .requestMatchers("/api/v1/auth/refresh").permitAll()
+                        .requestMatchers("/api/v1/auth/logout").permitAll()
                         .anyRequest().authenticated())
                 .oauth2Login(oauth2 ->  {
                     oauth2.successHandler(successHandler)

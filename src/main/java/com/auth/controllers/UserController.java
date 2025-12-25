@@ -27,12 +27,12 @@ public class UserController {
 
     @GetMapping("/email/{email}")
     public ResponseEntity<UserDto> getUserByEmail(@PathVariable String email){
-        return new ResponseEntity<>(userService.getUserByEmail(email),HttpStatus.FOUND);
+        return new ResponseEntity<>(userService.getUserByEmail(email),HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<UserDto> getUserById(@PathVariable String id){
-        return new ResponseEntity<>(userService.getUserById(id), HttpStatus.FOUND);
+        return new ResponseEntity<>(userService.getUserById(id), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")

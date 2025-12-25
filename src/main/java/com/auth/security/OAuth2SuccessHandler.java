@@ -5,7 +5,6 @@ import com.auth.entities.RefreshToken;
 import com.auth.entities.User;
 import com.auth.repositories.RefreshTokenRepository;
 import com.auth.repositories.UserRepo;
-import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -17,6 +16,7 @@ import org.springframework.security.oauth2.client.authentication.OAuth2Authentic
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.time.Instant;
@@ -33,6 +33,7 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
     private final CookieService cookieService;
 
     @Override
+    @Transactional
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
             logger.info("OAUTH2 LOGIN SUCCESSFUL");
             logger.info(authentication.toString());
@@ -61,6 +62,7 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
                             .enable(true)
                             .provider(Provider.GOOGLE)
                             .build();
+                    logger.info("Saving new User: {}", newUser);
                     user = userRepo.findByEmail(email).orElseGet(()-> userRepo.save(newUser));
 
                     String jti = UUID.randomUUID().toString();
@@ -81,6 +83,6 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
                 }
             }
 
-            response.getWriter().write("OAUTH2 LOGIN SUCCESSFUL");
+            response.sendRedirect("http://localhost:5173/auth/success");
     }
 }
